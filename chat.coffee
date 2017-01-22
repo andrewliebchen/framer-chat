@@ -5,11 +5,14 @@ class exports.Chat
 		fontSize: 24
 		lineHeight: 36
 		padding: 20
+		borderRadius: 20
 		avatarSize: 60
+		avatarBorderRadius: 30
 		inputBorderColor: '#ccc'
 		inputHeight: 80
 		placeholder: 'Start chatting'
 		defaultUserId: 1
+		authorTextColor: '#999'
 		bubbleColor:
 			right: '#4080FF'
 			left: '#eee'
@@ -71,7 +74,7 @@ class exports.Chat
 				parent: @comment
 				x: if align is 'right' then Align.right(-@options.padding) else @_leftPadding
 				width: @comment.width
-				color: '#999'
+				color: @options.authorTextColor
 				backgroundColor: null
 				style:
 					'font-weight': 'bold'
@@ -87,7 +90,7 @@ class exports.Chat
 				y: @options.lineHeight
 				backgroundColor: @options.bubbleColor[align]
 				color: @options.bubbleText[align]
-				borderRadius: @options.padding
+				borderRadius: @options.borderRadius
 				style:
 					'padding': "#{@options.padding}px"
 					'width': 'auto'
@@ -104,7 +107,7 @@ class exports.Chat
 					parent: @comment
 					name: 'comment:avatar'
 					size: @options.avatarSize
-					borderRadius: @options.avatarSize / 2
+					borderRadius: @options.avatarBorderRadius
 					image: "images/#{@_author.avatar}"
 					x: @options.padding
 					y: Align.bottom(-@options.padding * 2)
