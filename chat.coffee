@@ -156,7 +156,7 @@ class exports.Chat
 
 		createComment = (value) =>
 			newComment =
-				author: @options.defaultUserId,
+				author: @options.defaultUserId
 				message: value
 
 			@renderComment newComment, 'right'

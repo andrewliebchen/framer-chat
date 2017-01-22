@@ -125,6 +125,22 @@ chat = new Chat
   defaultUserId: 4
 ```
 
+## Adding user chats
+
+Out of the box, in the input field is hooked up and allows you to add comments to the chat log. It's also possible to add comments programmatically.
+
+```coffeescript
+{ Chat } = require 'chat'
+
+chat = new Chat
+
+newComment =
+	author: 1
+	message: 'This is a programmatically added comment!'
+
+chat.renderComment newComment, 'right'
+```
+
 ## Usage example
 
 Check out the `/example` directory.
