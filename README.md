@@ -2,6 +2,8 @@
 
 A Framer module to easily build an interactive chat interface.
 
+![Demo](/img/chat.gif)
+
 ## Add it to your Framer Studio project
 
 * Download the project from Github.
