@@ -6,6 +6,7 @@ class exports.Chat
 		lineHeight: 36
 		padding: 20
 		borderRadius: 20
+		maxWidth: Screen.width * 0.6
 		avatarSize: 60
 		avatarBorderRadius: 30
 		inputBorderColor: '#ccc'
@@ -37,6 +38,7 @@ class exports.Chat
 		if options == undefined then options = {}
 		options = _.defaults options, defaults
 		@options = options
+		@_group = 0
 
 		@commentsScroll = new ScrollComponent
 			name: 'comments'
@@ -53,12 +55,27 @@ class exports.Chat
 			# Calcuate the message size
 			@_messageSize = Utils.textSize comment.message,
 				{'padding': "#{@options.padding}px"},
-				{width: Screen.width * 0.6}
+				{width: @options.maxWidth}
 
 			@_leftPadding = @options.padding * 2 + @options.avatarSize
 
 			# Find the author
 			@_author = _.find @options.users, {id: comment.author}
+
+			# Find comments by the same author
+			# Only works on left comments so far, need to do for right
+			@_commentIndex = _.findIndex @options.data, comment
+			
+			@_previousComment = @_nextComment = @options.data[@_commentIndex - 1]
+			@_nextComment = @options.data[@_commentIndex + 1]
+
+			@_sameNextAuthor = if @_nextComment and @_nextComment.author is comment.author then true else false
+			@_samePreviousAuthor = if @_previousComment and @_previousComment.author is comment.author then true else false
+
+			if @_samePreviousAuthor or @_sameNextAuthor
+				@_group = @_group + 1
+
+			@_messageMargin = if @_sameNextAuthor and align is 'left' then @options.lineHeight * 0.25 else @options.lineHeight * 2
 
 			# Construct the comment
 			@comment = new Layer
@@ -66,21 +83,21 @@ class exports.Chat
 				name: 'comment'
 				backgroundColor: null
 				width: Screen.width
-				height: @_messageSize.height + @options.lineHeight * 2
+				height: @_messageSize.height + @_messageMargin
 
-			@author = new Layer
-				name: 'comment:author'
-				html: @_author.name
-				parent: @comment
-				x: if align is 'right' then Align.right(-@options.padding) else @_leftPadding
-				width: @comment.width
-				color: @options.authorTextColor
-				backgroundColor: null
-				style:
-					'font-weight': 'bold'
-					'font-size': '90%'
-					'text-align': align
-
+			unless @_samePreviousAuthor
+				@author = new Layer
+					name: 'comment:author'
+					html: @_author.name
+					parent: @comment
+					x: if align is 'right' then Align.right(-@options.padding) else @_leftPadding
+					width: @comment.width
+					color: @options.authorTextColor
+					backgroundColor: null
+					style:
+						'font-weight': 'bold'
+						'font-size': '90%'
+						'text-align': align
 
 			@message = new Layer
 				name: 'comment:message'
@@ -97,21 +114,38 @@ class exports.Chat
 					'max-width': "#{@_messageSize.width}px"
 					'text-align': align
 
+
+			# Special stuff for alignment
 			if align is 'right'
 				@_width = parseInt @message.computedStyle()['width']
 				@message.x = Screen.width - @_width - @options.padding
 			else
+				# Avatar
 				@.message.x = @_leftPadding
 
-				@avatar = new Layer
-					parent: @comment
-					name: 'comment:avatar'
-					size: @options.avatarSize
-					borderRadius: @options.avatarBorderRadius
-					image: "images/#{@_author.avatar}"
-					x: @options.padding
-					y: Align.bottom(-@options.padding * 2)
+				unless @_sameNextAuthor
+					@avatar = new Layer
+						parent: @comment
+						name: 'comment:avatar'
+						size: @options.avatarSize
+						borderRadius: @options.avatarBorderRadius
+						image: "images/#{@_author.avatar}"
+						x: @options.padding
+						y: Align.bottom(-@options.padding * 2)
 
+				# Grouped comments border
+				if @_samePreviousAuthor and @_sameNextAuthor
+					@message.style =
+						"border-top-#{align}-radius": '3px'
+						"border-bottom-#{align}-radius": '3px'
+
+				if @_group is 1
+					@message.style = "border-bottom-#{align}-radius": '3px'
+
+				if @_group > 1 and !@_sameNextAuthor
+					@message.style = "border-top-#{align}-radius": '3px'
+
+			# Recalcuate position
 			@reflow()
 
 		@reflow = () =>
