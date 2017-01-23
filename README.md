@@ -33,11 +33,15 @@ chat = new Chat
   fontSize: 24  # Text size in pixels
   lineHeight: 36  # Line height in pixels
   padding: 20  # Space between text and bubble, bubble and screen, etc.
+  borderRadius: 20 # Radius of the chat bubbles
+  maxWidth: Screen.width * 0.6 # Maximum width of chat bubbles
   avatarSize: 60  # Height and width of user avatars
+  avatarBorderRadius: 30 # Border radius of avatars (circular by default)
   inputBorderColor: '#ccc'  # Color of the top border of the input container
   inputHeight: 80  # Height of the input container
   placeholder: 'Start chatting'  # Placeholder text for the input container
   defaultUserId: 1  # The user doing the chatting. The ID references the collection below
+  authorTextColor: '#999' # Text color of user names
   bubbleColor:  # Text bubble colors. Usually the left bubble is grey
     right: '#4080FF'
     left: '#eee'
@@ -143,7 +147,7 @@ chat.renderComment newComment, 'right'
 
 ## Usage example
 
-Check out the example project. 
+Check out the example project.
 
 ## Todo
 
