@@ -144,3 +144,9 @@ chat.renderComment newComment, 'right'
 ## Usage example
 
 Check out the `/example` directory.
+
+## Todo
+
+* ⬜️ Group right aligned comments
+* ⬜️ Timestamps
+* ⬜️ Ability to pass in comments with special formats
