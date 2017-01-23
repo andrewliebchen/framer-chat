@@ -143,7 +143,7 @@ chat.renderComment newComment, 'right'
 
 ## Usage example
 
-Check out the `/example` directory.
+Check out the example project. 
 
 ## Todo
 
